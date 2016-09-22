@@ -62,7 +62,7 @@ param (
     [ValidateSet('Business','ProPlus', ignorecase=$true)]
 	[string]$SKU,
 
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory=$true)]
     [ValidateSet('Current','Deferred','FirstReleaseCurrent','FirstReleaseDeferred',ignorecase=$true)]
     [string]$Channel
 
