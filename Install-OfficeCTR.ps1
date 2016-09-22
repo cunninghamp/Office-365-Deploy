@@ -56,7 +56,7 @@ V1.00, 22/09/2016 - Comment
 param (
 	
 	[Parameter(Mandatory=$true)]
-	[switch]$InstallRoot,
+	[string]$InstallRoot,
 
 	[Parameter(Mandatory=$true)]
     [ValidateSet('Business','ProPlus', ignorecase=$False)]
