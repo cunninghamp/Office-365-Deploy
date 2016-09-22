@@ -71,28 +71,30 @@ param (
 
 $ConfigurationXML = "$($InstallRoot)\$($SKU)\$($Channel)\configuration.xml"
 
-try {
-    Test-Path $ConfigurationXML -ErrorAction STOP
-}
-catch {
+If (!(Test-Path $ConfigurationXML)) {
     throw "Unable to locate a configuration XML file at $($ConfigurationXML)"
 }
 
 $setuppath = "$($InstallRoot)\$($SKU)\$($Channel)\Setup.exe"
-try {
 
-}
-catch {
+if (!(Test-Path $setuppath)) {
     throw "Unable to locate a Setup.exe file at $($setuppath)"
 }
 
 Write-Host "Attempting to install Office 365 $($SKU) $($Channel)"
-$process = Start-Process -FilePath "$($InstallRoot)\$($SKU)\$($Channel)\Setup.exe" -ArgumentList "/Configure $($InstallRoot)\$($SKU)\$($Channel)\configuration.xml" -Wait -PassThru
-if ($process.ExitCode -eq 0)
-{
-    Write-Host -ForegroundColor Green "Office setup started without error."
+
+try {
+    $process = Start-Process -FilePath "$($InstallRoot)\$($SKU)\$($Channel)\Setup.exe" -ArgumentList "/Configure $($InstallRoot)\$($SKU)\$($Channel)\configuration.xml" -Wait -PassThru -ErrorAction STOP
+
+    if ($process.ExitCode -eq 0)
+    {
+        Write-Host -ForegroundColor Green "Office setup started without error."
+    }
+    else
+    {
+        Write-Warning "Installer exit code  $($process.ExitCode)."
+    }
 }
-else
-{
-    Write-Warning "Installer exit code  $($process.ExitCode)."
+catch {
+    Write-Warning $_.Exception.Message
 }
