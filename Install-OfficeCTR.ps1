@@ -59,11 +59,11 @@ param (
 	[string]$InstallRoot,
 
 	[Parameter(Mandatory=$true)]
-    [ValidateSet('Business','ProPlus', ignorecase=$False)]
+    [ValidateSet('Business','ProPlus', ignorecase=$true)]
 	[string]$SKU,
 
     [Parameter(Mandatory=$false)]
-    [ValidateSet('Current','Deferred','FirstReleaseCurrent','FirstReleaseDeferred',ignorecase=$False)]
+    [ValidateSet('Current','Deferred','FirstReleaseCurrent','FirstReleaseDeferred',ignorecase=$true)]
     [string]$Channel
 
 	)
