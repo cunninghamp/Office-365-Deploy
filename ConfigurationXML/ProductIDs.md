@@ -1,6 +1,6 @@
 #Office Click-to-Run Product IDs
 
-Source: (Microsoft)[https://support.microsoft.com/en-au/kb/2842297]
+Source: [Microsoft](https://support.microsoft.com/en-au/kb/2842297)
 
 The following product IDs are supported for use in Configuration.xml files with the Office Deployment Tool.
 
