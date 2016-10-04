@@ -17,17 +17,14 @@ at http://practical365.com
 Specify the UNC path to the network share that hosts the Office 365
 setup and configuration files.
 
-.PARAMETER OfficeVersion
-Specify the Office CTR version to deploy (e.g. 2013, or 2016)
-
 .PARAMETER SKU
 Specify the the Office CTR SKU to deploy (e.g. ProPlus, Business)
 
-.PARAMETER 
+.PARAMETER Channel
+Specify the build channel to deploy (e.g. Current, Deferred)
 
 .EXAMPLE
-.\Verb-NounsAndThings.ps1
-What does this example do...
+.\Install-OfficeCTR.ps1 -InstallRoot \\mgmt\Installs\OfficeCTR -SKU ProPlus -Channel Deferred
 
 .NOTES
 Written by: Paul Cunningham
@@ -69,32 +66,63 @@ param (
 	)
 
 
-$ConfigurationXML = "$($InstallRoot)\$($SKU)\$($Channel)\configuration.xml"
+function DoInstall {
 
-If (!(Test-Path $ConfigurationXML)) {
-    throw "Unable to locate a configuration XML file at $($ConfigurationXML)"
-}
+    $ConfigurationXML = "$($InstallRoot)\$($SKU)\$($Channel)\configuration.xml"
 
-$setuppath = "$($InstallRoot)\$($SKU)\$($Channel)\Setup.exe"
-
-if (!(Test-Path $setuppath)) {
-    throw "Unable to locate a Setup.exe file at $($setuppath)"
-}
-
-Write-Host "Attempting to install Office 365 $($SKU) $($Channel)"
-
-try {
-    $process = Start-Process -FilePath "$($InstallRoot)\$($SKU)\$($Channel)\Setup.exe" -ArgumentList "/Configure $($InstallRoot)\$($SKU)\$($Channel)\configuration.xml" -Wait -PassThru -ErrorAction STOP
-
-    if ($process.ExitCode -eq 0)
-    {
-        Write-Host -ForegroundColor Green "Office setup started without error."
+    If (!(Test-Path $ConfigurationXML)) {
+        throw "Unable to locate a configuration XML file at $($ConfigurationXML)"
     }
-    else
-    {
-        Write-Warning "Installer exit code  $($process.ExitCode)."
+
+    $setuppath = "$($InstallRoot)\$($SKU)\$($Channel)\Setup.exe"
+
+    if (!(Test-Path $setuppath)) {
+        throw "Unable to locate a Setup.exe file at $($setuppath)"
+    }
+
+    Write-Host "Attempting to install Office 365 $($SKU) $($Channel)"
+
+    try {
+        $process = Start-Process -FilePath "$($InstallRoot)\$($SKU)\$($Channel)\Setup.exe" -ArgumentList "/Configure $($InstallRoot)\$($SKU)\$($Channel)\configuration.xml" -Wait -PassThru -ErrorAction STOP
+
+        if ($process.ExitCode -eq 0)
+        {
+            Write-Host -ForegroundColor Green "Office setup started without error."
+        }
+        else
+        {
+            Write-Warning "Installer exit code  $($process.ExitCode)."
+        }
+    }
+    catch {
+        Write-Warning $_.Exception.Message
+    }
+
+}
+
+#Check if Office is already installed, as indicated by presence of registry key
+$RegistryPath = 'HKLM:\SOFTWARE\Microsoft\Office\16.0\ClickToRunStore\Packages\{9AC08E99-230B-47e8-9721-4577B7F124EA}'
+
+if (Test-Path $RegistryPath) {
+    #Check for children
+
+    $Item = Get-ItemProperty -Path $RegistryPath
+
+    if (!($Item.'(default)' -eq $null)) {
+        #Office is installed, according to registry key. Nothing further to do.
+        EXIT
+    }
+    else {
+        #Registry key exists but default value is empty, install needed
+        DoInstall
     }
 }
-catch {
-    Write-Warning $_.Exception.Message
+else {
+    #Registry key doesn't exist, install needed
+    DoInstall
 }
+
+
+
+
+
