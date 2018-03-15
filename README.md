@@ -1,4 +1,4 @@
-#Office 365 Client Deployment Scripts
+# Office 365 Client Deployment Scripts
 
 This repository hosts PowerShell scripts that assist with the deployment of Office 365 client software.
 
@@ -8,7 +8,7 @@ The scripts included at this time are:
 
 If you're looking for more complex, featured scripts you might be interested in [Microsoft's Office Deployment Scripts for IT Pros](http://officedev.github.io/Office-IT-Pro-Deployment-Scripts/).
 
-##Install-OfficeCTR.ps1 - Office 365 CTR Install Script
+## Install-OfficeCTR.ps1 - Office 365 CTR Install Script
 
 This PowerShell script will install Office 365 Click-to-Run when it is run manually, or as a logon/startup script. Install-OfficeCTR.ps1 supports both the ProPlus and Business SKU for Office 365, as well as the four channels:
 
@@ -21,7 +21,7 @@ This script is designed to work with Office 2016 builds of Office 365 CTR, not O
 
 Before using this script you should set up an shared folder for your Office 365 CTR deployments by following the instructions at [Practical 365](https://practical365.com).
 
-###Usage:
+### Usage:
 
 Install-OfficeCTR.ps1 uses the following parameters:
 
@@ -42,7 +42,7 @@ The example above will look for setup and configuration files in **\\\mgmt\Insta
 
 
 
-##Credits
+## Credits
 Written by: Paul Cunningham
 
 Find me on:
